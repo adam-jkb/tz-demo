@@ -24,7 +24,7 @@
 #include "secure_nsc.h"
 #include "rng.h"
 #include "hash.h"
-//#include "uECC.h"
+#include "uECC.h"
 
 #include "string.h"
 #include "stdlib.h"
@@ -99,51 +99,47 @@ CMSE_NS_ENTRY void hashN(uint8_t* in, uint32_t size, uint8_t* out) {
 	}
 }
 
-// CMSE_NS_ENTRY void key_demo() {
-// 	uECC_Curve curvetype = uECC_secp256k1();
-// 	uint32_t privkeysize = uECC_curve_private_key_size(curvetype);
-// 	uint32_t pubkeysize = uECC_curve_public_key_size(curvetype);
+CMSE_NS_ENTRY void key_demo() {
+	uECC_Curve curvetype = uECC_secp256k1();
+	uint32_t privkeysize = uECC_curve_private_key_size(curvetype);
+	uint32_t pubkeysize = uECC_curve_public_key_size(curvetype);
 
-// 	uint8_t privk1[privkeysize];
-// 	uint8_t pubk1[pubkeysize];
-// 	uint8_t privk2[privkeysize];
-// 	uint8_t pubk2[pubkeysize];
+	uint8_t privk1[privkeysize];
+	uint8_t pubk1[pubkeysize];
+	uint8_t privk2[privkeysize];
+	uint8_t pubk2[pubkeysize];
 
-// 	volatile int good_keys = 0;
-// 	if(
-// 		uECC_make_key(pubk1, privk1, curvetype) &&
-// 		uECC_make_key(pubk2, privk2, curvetype)
-// 	) {
-// 		if(
-// 			uECC_valid_public_key(pubk1, curvetype) &&
-// 			uECC_valid_public_key(pubk2, curvetype)
-// 		) {
-// 			uint8_t calcpubk1[pubkeysize];
-// 			uint8_t calcpubk2[pubkeysize];
+	volatile int good_keys = 0;
+	if(
+		uECC_make_key(pubk1, privk1, curvetype) &&
+		uECC_make_key(pubk2, privk2, curvetype)
+	) {
+		if(
+			uECC_valid_public_key(pubk1, curvetype) &&
+			uECC_valid_public_key(pubk2, curvetype)
+		) {
+			uint8_t calcpubk1[pubkeysize];
+			uint8_t calcpubk2[pubkeysize];
 
-// 			uECC_compute_public_key(privk1, calcpubk1, curvetype);
-// 			uECC_compute_public_key(privk2, calcpubk2, curvetype);
+			uECC_compute_public_key(privk1, calcpubk1, curvetype);
+			uECC_compute_public_key(privk2, calcpubk2, curvetype);
 
-// 			if(
-// 				!memcmp(calcpubk1, pubk1, pubkeysize) &&
-// 				!memcmp(calcpubk2, pubk2, pubkeysize)
-// 			) {
-// 				good_keys = 1;
-// 			}
-// 		}
-// 	}
-
-
-// 	const char * msg = "message";
-// 	uint8_t hash[32];
-// 	hashN(msg, strlen(msg), hash);
-
-// 	//TODO actually do the dsa
+			if(
+				!memcmp(calcpubk1, pubk1, pubkeysize) &&
+				!memcmp(calcpubk2, pubk2, pubkeysize)
+			) {
+				good_keys = 1;
+			}
+		}
+	}
 
 
+	const char * msg = "message";
+	uint8_t hash[32];
+	hashN((uint8_t*)msg, strlen(msg), (uint8_t*)hash);
 
-
-// }
+	//TODO actually do the dsa
+}
 
 /**
   * @}

@@ -43,6 +43,7 @@ void SECURE_RegisterCallback(SECURE_CallbackIDTypeDef CallbackId, void *func);
 
 void hashN(uint8_t* in, uint32_t size, uint8_t* out);
 int genRandomBytes(unsigned char* target, unsigned int size);
+void key_demo();
 
 #endif /* SECURE_NSC_H */
 /* USER CODE END Non_Secure_CallLib_h */

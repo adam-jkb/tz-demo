@@ -51,23 +51,24 @@ set(CMAKE_CXX_COMPILER_FORCED "true")
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE 
     # Add user defined symbols
+	uECC_ENABLE_VLI_API=1
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
-	# ./Drivers/micro-ecc
+	./Drivers/micro-ecc
 )
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
-	# ./Drivers/micro-ecc/asm_arm.asm
-	# ./Drivers/micro-ecc/asm_arm_mult_square.asm
-	# ./Drivers/micro-ecc/asm_arm_mult_square_umaal.asm
-	# ./Drivers/micro-ecc/curve-specific.asm
-	# ./Drivers/micro-ecc/platform-specific.asm
-	# ./Drivers/micro-ecc/uECC.c
+	./Drivers/micro-ecc/asm_arm.inc
+	./Drivers/micro-ecc/asm_arm_mult_square.inc
+	./Drivers/micro-ecc/asm_arm_mult_square_umaal.inc
+	./Drivers/micro-ecc/curve-specific.inc
+	./Drivers/micro-ecc/platform-specific.inc
+	./Drivers/micro-ecc/uECC.c
 )
 
 # Link directories setup

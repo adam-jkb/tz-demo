@@ -1,0 +1,3 @@
+[submodule "Secure/Drivers/micro-ecc"]
+	path = Secure/Drivers/micro-ecc
+	url = https://github.com/adam-jkb/micro-ecc

@@ -27,7 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "secure_nsc.h"
-//#include "uECC.h"
+#include "uECC.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,7 +103,7 @@ int main(void)
   MX_RNG_Init();
   /* USER CODE BEGIN 2 */
   MX_GPIO_Init_Nsec();
-//  uECC_set_rng(&genRandomBytes);
+  uECC_set_rng(&genRandomBytes);
   /* USER CODE END 2 */
 
   /*************** Setup and jump to non-secure *******************************/
