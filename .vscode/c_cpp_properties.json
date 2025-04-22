@@ -1,0 +1,16 @@
+{
+    "version": 4,
+    "configurations": [
+        {
+            "name": "STM32",
+            "intelliSenseMode": "${default}",
+            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++20",
+            "compileCommands": [
+                "${workspaceFolder}/Secure/build/compile_commands.json",
+                "${workspaceFolder}/NonSecure/build/compile_commands.json"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.asm": "c",
+		"uecc.h": "c",
+		"secure_nsc.h": "c"
+	}
+}

@@ -1,0 +1,14 @@
+build
+.ninja_log
+.ninja_deps
+build.ninja
+CMakeCache.txt
+CMakeFiles
+Secure/build
+Secure/tmp
+Secure/src
+NonSecure/build
+NonSecure/tmp
+NonSecure/src
+Secure_nsclib/*.o
+
