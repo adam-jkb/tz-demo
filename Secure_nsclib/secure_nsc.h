@@ -43,7 +43,25 @@ void SECURE_RegisterCallback(SECURE_CallbackIDTypeDef CallbackId, void *func);
 
 void hashN(uint8_t* in, uint32_t size, uint8_t* out);
 int genRandomBytes(unsigned char* target, unsigned int size);
+
+int signHash(uint8_t hash[32], uint8_t signature[64]);
+int verifyHashSignature(uint8_t hash[32], uint8_t signature[64]);
+int verifyHashSignatureWithWrongKey(uint8_t hash[32], uint8_t signature[64]);
+
+#ifdef KEY_DEMO
 int key_demo();
+#endif
+
+#ifdef TZ_DEMO
+typedef void (*tzfunc)();
+
+void tz_demo_hidden();
+
+tzfunc tz_demo_public();
+#endif
+
+int signHash(uint8_t hash[32], uint8_t signature[64]);
+int verifyHashSignature(uint8_t hash[32], uint8_t signature[64]);
 
 #endif /* SECURE_NSC_H */
 /* USER CODE END Non_Secure_CallLib_h */

@@ -21,8 +21,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "string.h"
 #ifdef DEBUG
 #include "stdio.h"
+#include "stdlib.h"
 #else
 
 inline int printf(const char * __restrict, ...) {
@@ -58,9 +60,6 @@ inline int printf(const char * __restrict, ...) {
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
-__IO uint32_t BspButtonState = BUTTON_RELEASED;
-
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -82,13 +81,11 @@ int __io_putchar(int ch) {
 
 
 #ifdef DEBUG
-#include "stdlib.h"
-#include "string.h"
 /**
   * @brief Prints ASCII hash of a given number to check correctness of hash function
   * @retval None
   */
-void Print_ASCII_Hash_uint32(uint32_t num) {
+void Print_Hash_uint32(uint32_t num) {
 	  uint8_t hash[32];
 	  uint8_t msg[12];
 	  itoa(num, msg, 10);
@@ -100,18 +97,97 @@ void Print_ASCII_Hash_uint32(uint32_t num) {
 	  }
 	  printf("\n");
 }
+#else
+/**
+  * @brief Calculates hash of a given number to check correctness of hash function, without ascii conversion, for debugging purposes only
+  * @retval None
+  */
+void Print_Hash_uint32(uint32_t num) {
+	uint8_t hash[32];
+	hashN((uint8_t*)&msg, 1 hash);
+}
 #endif
 
 
+/**
+  * @brief Called on user button push, toggles leds, and prints a rng+hash demo
+  * @retval None
+  */
 void BSP_PB_Callback(Button_TypeDef Button) {
   BSP_LED_Toggle(LED_GREEN);
   BSP_LED_Toggle(LED_BLUE);
   BSP_LED_Toggle(LED_RED);
 
+  //rng+hash demo
   volatile uint32_t num;
   genRandomBytes((uint8_t*)&num, 4);
+  Print_Hash_uint32(num);
+}
 
-  Print_ASCII_Hash_uint32(num);
+
+/**
+  * @brief Called on user button push, toggles leds, and prints a rng+hash demo
+  * @retval None
+  */
+void verification_demo() {
+  // initialize mock data - this represents our external data storage
+  char pretend_data[76] = "valami adat"; // 76 = 11 + 64 + 1
+  // strncpy(pretend_data, "valami adat", 11+1);
+  unsigned datalen = 11;
+
+  // do the hash
+  uint8_t hash[32];
+  hashN(pretend_data, datalen, hash);
+
+  // sign it, and append signature to data
+  signHash(hash, &pretend_data[12]);
+
+
+  // pretend to forget hash, disconnect, reconnect "storage device"
+
+
+  // hash data again
+  hashN(pretend_data, datalen, hash);
+  //verify
+  int is_good = verifyHashSignature(hash, &pretend_data[12]);
+  printf("verify all correct result: %d\n", is_good);
+
+
+  // pretend to forget hash, disconnect, reconnect "storage device", and corrupt data
+  char c = pretend_data[0];
+  pretend_data[0] = 'a';
+
+
+  // hash data again
+  hashN(pretend_data, datalen, hash);
+  //verify broken data
+  is_good = verifyHashSignature(hash, &pretend_data[12]);
+  printf("verify broken data result: %d\n", is_good);
+
+
+  // pretend to forget hash, disconnect, reconnect "storage device", and restore original data for further demo
+  pretend_data[0] = c;
+
+
+  // hash data again
+  hashN(pretend_data, datalen, hash);
+  //verify with wrong key
+  is_good = verifyHashSignatureWithWrongKey(hash, &pretend_data[12]);
+  printf("verify wrong key result: %d\n", is_good);
+  
+  
+  // pretend to forget hash, disconnect, reconnect "storage device", and corrupt signature
+	if(pretend_data[13] == 1) {
+		pretend_data[13] = 2;
+	} else {
+		pretend_data[13] = 1;
+	}
+
+	// hash data again
+	hashN(pretend_data, datalen, hash);
+  //verify broken sign
+	is_good = verifyHashSignature(hash, &pretend_data[12]);
+  printf("verify broken sign result: %d\n", is_good);
 }
 /* USER CODE END 0 */
 
@@ -166,11 +242,22 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  #ifdef KEY_DEMO
   key_demo();
+  #endif
+  
+
+  #ifdef TZ_DEMO
+  tzfunc should_not_work = tz_demo_public();
+  should_not_work();
+  #endif
+
+  verification_demo();
+  
   while (1)
   {
     /* USER CODE END WHILE */
-
+    // wait for user to push button
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

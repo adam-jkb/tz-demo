@@ -51,6 +51,8 @@ set(CMAKE_CXX_COMPILER_FORCED "true")
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE 
     # Add user defined symbols
+	#TZ_DEMO=1
+	KEY_DEMO=1
 )
 
 # Add include paths

@@ -101,6 +101,7 @@ CMSE_NS_ENTRY void hashN(uint8_t* in, uint32_t size, uint8_t* out) {
 	}
 }
 
+#ifdef KEY_DEMO
 CMSE_NS_ENTRY int key_demo() {
 	uECC_Curve curvetype = uECC_secp256k1();
 	uint32_t privkeysize = uECC_curve_private_key_size(curvetype);
@@ -129,9 +130,12 @@ CMSE_NS_ENTRY int key_demo() {
 	uint8_t calcpubk1[pubkeysize];
 	uint8_t calcpubk2[pubkeysize];
 
-	uECC_compute_public_key(privk1, calcpubk1, curvetype);
-	uECC_compute_public_key(privk2, calcpubk2, curvetype);
-
+	if(
+		!uECC_compute_public_key(privk1, calcpubk1, curvetype) ||
+		!uECC_compute_public_key(privk2, calcpubk2, curvetype)
+	) {
+		return 1;
+	}
 	if(
 		memcmp(calcpubk1, pubk1, pubkeysize) ||
 		memcmp(calcpubk2, pubk2, pubkeysize)
@@ -156,7 +160,7 @@ CMSE_NS_ENTRY int key_demo() {
 	) {
 		return 1;
 	}
-	// test whether we can signatures match
+	// test whether signatures match
 	if(
 		!uECC_verify(pubk1, hash1, sha256size, sign1, curvetype) ||
 		!uECC_verify(pubk2, hash2, sha256size, sign2, curvetype)
@@ -166,6 +170,17 @@ CMSE_NS_ENTRY int key_demo() {
 
 	return 0;
 }
+#endif
+
+#ifdef TZ_DEMO
+void tz_demo_hidden() {
+	volatile int a; // do not optimize out
+}
+
+CMSE_NS_ENTRY tzfunc tz_demo_public() {
+	return &tz_demo_hidden;
+}
+#endif
 
 /**
   * @}

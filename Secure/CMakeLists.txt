@@ -52,6 +52,8 @@ set(CMAKE_CXX_COMPILER_FORCED "true")
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE 
     # Add user defined symbols
 	uECC_ENABLE_VLI_API=1
+	#TZ_DEMO=1
+	KEY_DEMO=1
 )
 
 # Add include paths
@@ -69,6 +71,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 	./Drivers/micro-ecc/curve-specific.inc
 	./Drivers/micro-ecc/platform-specific.inc
 	./Drivers/micro-ecc/uECC.c
+	./Core/Src/validator.c
 )
 
 # Link directories setup

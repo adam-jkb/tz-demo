@@ -39,8 +39,8 @@
             // ],
             /* If you use external loader, add additional arguments */
             //"serverArgs": ["--extload", "path/to/ext/loader.stldr"],
-            //"preLaunchTask": "Build + Flash Secure & NonSecure"
-			"preLaunchTask": "CubeProg: Flash"
+            "preLaunchTask": "Build + Flash Secure & NonSecure"
+			//"preLaunchTask": "CubeProg: Flash"
         },
 		{
             "name": "Debug Microcontroller Secure and NonSecure - OCD",
@@ -114,8 +114,8 @@
             ],
             /* If you use external loader, add additional arguments */
             //"serverArgs": ["--extload", "path/to/ext/loader.stldr"],
-            //"preLaunchTask": "Build + Flash Secure & NonSecure"
-			"preLaunchTask": "CubeProg: Flash"
+            "preLaunchTask": "Build + Flash Secure & NonSecure"
+			//"preLaunchTask": "CubeProg: Flash"
         },
         // {
         //     "name": "Attach to Secure and NonSecure Microcontroller - ST-Link",

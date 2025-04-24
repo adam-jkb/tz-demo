@@ -38,6 +38,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+
 /* Non-secure Vector table to jump to (internal Flash Bank2 here)             */
 /* Caution: address must correspond to non-secure internal Flash where is     */
 /*          mapped in the non-secure vector table                             */
@@ -59,7 +60,8 @@
 /* Private function prototypes -----------------------------------------------*/
 static void NonSecure_Init(void);
 /* USER CODE BEGIN PFP */
-
+//ugly hack to hide from nsc
+void initKeys();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -104,6 +106,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   MX_GPIO_Init_Nsec();
   uECC_set_rng(&genRandomBytes);
+	initKeys();
+
   /* USER CODE END 2 */
 
   /*************** Setup and jump to non-secure *******************************/

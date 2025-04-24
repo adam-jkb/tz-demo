@@ -20,6 +20,6 @@ set(CMAKE_PROJECT_NAME vscode_tz)
 # Core project settings
 project(${CMAKE_PROJECT_NAME})
 
+
 # Include external project file
 include("mx-generated.cmake")
-

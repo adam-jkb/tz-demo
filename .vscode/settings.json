@@ -3,6 +3,10 @@
 		"*.asm": "c",
 		"*.inc": "c",
 		"uecc.h": "c",
-		"secure_nsc.h": "c"
+		"secure_nsc.h": "c",
+		"stdint.h": "c",
+		"stdio.h": "c",
+		"cstdint": "c",
+		"random": "c"
 	}
 }
