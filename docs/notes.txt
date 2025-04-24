@@ -1,0 +1,45 @@
+to protect the manufacturer secrets trustzone is used in the following ways:
+	- the cryptographic library is wrapped in secure functions, restricting its use to provide only the strictly necessary functions reducing attack surface
+	- the manufacturer keys are stored in the secure zone, which can disallow readout, debug, write and erase separately from the non-secure side
+	- it's possible to "hide" (disallow from r/w/x until next boot) the bootup code that (potentially) sets the keys, rng functions, and other sensitive data
+this allows for manufacturers to create a secure api, callable from untrusted code, without fear of leaking secrets
+
+exploits exist to circumvent this protection, one example is provided here: https://github.com/CactiLab/ret2ns-Cortex-M-TrustZone
+naturally mitigations also exist to protect against such exploits.
+
+tamper protection is also provided by the chip, allowing e.g. for automatic erasure of sensitive information
+the tamper registers can also be secured, restricting access to the secure side
+
+side channel attacks are still possible, it is important to use a cryptographic library resistant to them
+here is an example implementation of ECDSA (and ECDH, but that is unused in this project) that is resistant to timing attacks: https://github.com/kmackay/micro-ecc/
+
+it is important to consider the cryptographic algorithms to use, as MCUs typically have limited resources
+ECC algorithms typically require smaller key sizes - and less cpu time - for the same level of protection, making them the standard for web and embedded use
+there are also concerns with the curves used in some ECC algorithms, as mentioned in this paper in the introduction section: https://eprint.iacr.org/2015/343.pdf
+for this reason most modern applications (tls, openssh, etc) no longer use ECDSA, but have switched to the ed25519 algorithm, which is supposed to be safe from said concerns, and also more efficiently calculatable
+this paper details a side channel resistant and performant implementation of the ed25519 algorithm for arm MCUs: https://www.semanticscholar.org/paper/Efficient-and-Side-Channel-Resistant-Ed25519-on-ARM-Owens-Khatib/3b69d57a7501b031276f6372ab71128ca1718de9
+sadly the source code linked in the paper is no longer available, and reproducing it from their descriptions would be quite laborious
+https://www.dlbeer.co.nz/oss/c25519.html also contains a timing attack resistant ed25519 implementation, but that is shown to have a design flaw here: https://github.com/MystenLabs/ed25519-unsafe-libs
+however with trustzone this design flaw could be hidden at no extra cost, and would presumably be a good solution, and a good showcase of opportunities provided by technologies like TZ
+for simplicities sake i used the ECDSA implementation linked above.
+
+the stm32l552 chip contains a hardware accelerator for hash funtions and a RNG making it well suited for these tasks
+
+if the project is built with TZ_DEMO enabled, then the non-secure side extracts a non-NSC function pointer from the secure side, tries to call it and HardFaults
+if the project is built with KEY_DEMO enabled, then it runs a basic demo/test of the crypto library before the other demos
+the main demo of the project is an ECDSA based authenticator made to simulate the authentication of an external data storage chip
+this is traditionally done with an external cryptographic coprocessor such as the DS28E38, but with an external chip extra validation is necessary to ensure that no physical tampering happened
+with trustzone this process is simplified: we can trust the data provided by the secure api, if we set up chip protections (detailed above) right
+therefore here a single keypair stored on the secure side is sufficient to validate the connected storage:
+the signing process is the following:
+	- create a hash of the contained data - conveniently there is a SHA256 hardware accelerator available in the MCU
+	- sign it with our private key - this is done on the secure side to avoid exposing the private key
+	- store the resulting signature on a known, predetermined place e.g. on the last few(4) bytes of the storage device
+then the verification can be done like this:
+	- hash the data except the signature - which can be done, since the signature is stored in a predetermined location
+	- verify it with the stored public key
+	- if the signatures match, then we know that the data was signed with our key, and is unchanged since the signing happened
+
+RTOS is not particularly useful for this demo
+if used, it runs on the NonSecure side wholly, and not much is changed about its behaviour.
+

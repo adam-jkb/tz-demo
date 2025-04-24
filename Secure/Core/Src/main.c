@@ -61,7 +61,7 @@
 static void NonSecure_Init(void);
 /* USER CODE BEGIN PFP */
 //ugly hack to hide from nsc
-void initKeys();
+static void initKeys();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/

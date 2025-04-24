@@ -1,0 +1,10 @@
+this project uses the CMake build system
+
+cubeide can run this, it needs to be imported as a CMake project, and its launch config needs to be set similarly as with other TZ projects
+it disables auto-build for the project but i'm sure there's a workaround
+
+it was made with vscode and cubemx, and is generally easier to use there.
+to build and run the project on vscode an extensions.json is provided with the dependencies, upon opening the project vscode should offer to install these extensions
+it is also necessary to have cubeclt or its components independently installed, along with the STMicro flavored OpenOCD
+their paths also need to be set in launch.json/tasks.json
+
